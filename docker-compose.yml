@@ -1,0 +1,30 @@
+version: "3.8"
+
+services:
+
+  accounts:
+    image: amsingh/accounts:latest
+    mem_limit: 700m
+    ports:
+      - "8080:8080"
+    networks:
+      - amsingh-network
+
+  loans:
+    image: amsingh/loans:latest
+    mem_limit: 700m
+    ports:
+      - "8090:8090"
+    networks:
+      - amsingh-network
+
+  cards:
+    image: amsingh/cards:latest
+    mem_limit: 700m
+    ports:
+      - "8091:8091"
+    networks:
+      - amsingh-network
+
+networks:
+  amsingh-network:

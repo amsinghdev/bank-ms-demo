@@ -35,3 +35,26 @@ Docker important command
     docker stop containerid
 - remove the container
     docker rm containerid
+- to remove all stoped container
+    docker container prune
+
+Create docker images using spring boot buildpack
+- Add the buildpacks plugins in pom.xml file
+- run the mvn spring-boot:build-image command from the root folder of the ms project
+
+- push docker image to docker hub
+    docker push image-tag // image-tag - dockerhub-username/imagename
+    create a docker tag -
+     docker tag amsingh/accounts:latest asingh434/accounts:base
+     docker push asingh434/accounts:base
+
+docker-compose
+- docker compose helps to create a yml file to define what are the services you want to create with a single command.
+- with docker-compose you can run or stop all the service from a single command
+- check the installed docker-compose
+    docker-compose version
+- create and run the service using docker-compose.yml file
+    docker-compose up
+- stop all the services
+    docker-compose stop
+
