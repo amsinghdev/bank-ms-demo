@@ -1,0 +1,37 @@
+Spring important command:-
+- build jar file
+    mvn clean install
+- run spring boot application via command
+    mvn spring-boot run
+- run spring boot application using java jar command
+    java -jar target/accounts-0.0.1-SNAPSHOT.jar
+
+
+Docker important command
+- create the docker images from docker file (Refer docker file in accounts ms for more details)
+    docker build . -t amsingh/accounts
+-  verify docker file
+    docker images
+-  get the details of docker images
+    docker inspect imagedId
+    i.e docker inspect 201  // imagedId - 201aabbdce12 .. short from of image id is also accepting by docker
+-  verify up and running container
+    docker ps
+    docker ps -a   //verify stop container
+- to run the account ms on port 8080 which need to mapped from container port e.g 8080
+    docker run -p 8080:8080 amsingh/accounts
+    docker run -d -p 8081:8080 amsingh/accounts // run the accounts ms in detached mode
+
+- to pause the container
+    docker pause containerid
+    i.e docker pause 2ee  // containerid - 2ee2fc321e77
+- to start the container id
+    docker start containerid
+- verify the logs of a container
+    docker logs containerid
+    i.e docker logs 2ee
+        docker logs -f 2ee   // -f to follow the latest log
+- stop the container
+    docker stop containerid
+- remove the container
+    docker rm containerid
