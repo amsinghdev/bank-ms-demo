@@ -25,9 +25,7 @@ public class AccountsController {
 
     @PostMapping("/accounts")
     public Accounts getAccountDetails(@RequestBody Customer customer){
-        System.out.println("customer id.."+customer.getCustomerId());
         Accounts accounts = accountsRepository.getAccountByCustomerId(customer.getCustomerId());
-        System.out.println("account..."+ accounts.toString());
         if(accounts != null)
             return accounts;
         return null;

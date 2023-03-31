@@ -58,3 +58,10 @@ docker-compose
 - stop all the services
     docker-compose stop
 
+==> Mysql
+To pull and start the mysql container
+- docker run --name mysql-container -p 3306:3306 -e MYSQL_ROOT_PASSWORD=password mysql 
+Interact with the container
+ - docker exec -it mysql-container bash
+ - mysql -u root -ppassword
+
