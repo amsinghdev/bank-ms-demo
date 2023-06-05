@@ -1,0 +1,70 @@
+version: "3.8"
+
+services:
+
+  configserver:
+    image: asingh434/configservice:latest
+    mem_limit: 700m
+    ports:
+      - "8071:8071"
+    networks:
+      - ambank
+
+  accounts:
+    image: asingh434/accounts:latest
+    mem_limit: 700m
+    ports:
+      - "8080:8080"
+    networks:
+      - ambank
+    depends_on:
+      - configserver
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 30s
+        max_attempts: 3
+        window: 120s
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+  loans:
+    image: asingh434/loans:latest
+    mem_limit: 700m
+    ports:
+      - "8090:8090"
+    networks:
+      - ambank
+    depends_on:
+      - configserver
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 30s
+        max_attempts: 3
+        window: 120s
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+
+  cards:
+    image: asingh434/cards:latest
+    mem_limit: 700m
+    ports:
+      - "8091:8091"
+    networks:
+      - ambank
+    depends_on:
+      - configserver
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 30s
+        max_attempts: 3
+        window: 120s
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+
+networks:
+  ambank:
