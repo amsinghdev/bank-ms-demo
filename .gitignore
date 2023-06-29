@@ -3,3 +3,10 @@ eurekaserver/.mvn/wrapper/maven-wrapper.jar
 eurekaserver/.mvn/wrapper/maven-wrapper.jar
 eurekaserver/.mvn/wrapper/maven-wrapper.properties
 eurekaserver/.mvn/wrapper/maven-wrapper.properties
+*.jar
+gatewayserver/.mvn/wrapper/maven-wrapper.properties
+gatewayserver/gatewayserver.iml
+gatewayserver/HELP.md
+gatewayserver/mvnw
+gatewayserver/mvnw.cmd
+*.class
