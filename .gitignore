@@ -10,3 +10,11 @@ gatewayserver/HELP.md
 gatewayserver/mvnw
 gatewayserver/mvnw.cmd
 *.class
+gatewayserver/target/gatewayserver-0.0.1-SNAPSHOT.jar.original
+gatewayserver/target/maven-archiver/pom.properties
+gatewayserver/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
+gatewayserver/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
+gatewayserver/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst
+gatewayserver/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst
+gatewayserver/target/surefire-reports/com.amit.gatewayserver.GatewayserverApplicationTests.txt
+gatewayserver/target/surefire-reports/TEST-com.amit.gatewayserver.GatewayserverApplicationTests.xml
