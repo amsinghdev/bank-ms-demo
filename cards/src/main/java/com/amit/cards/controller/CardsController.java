@@ -8,6 +8,8 @@ import com.amit.cards.repository.CardsRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,9 +24,13 @@ public class CardsController {
     @Autowired
     private CardsServiceConfig cardsServiceConfig;
 
+    private Logger logger = LoggerFactory.getLogger(CardsController.class);
+
     @PostMapping("/cards")
     public List<Cards> getCardsDetails(@RequestHeader("ambank-correlation-id") String correlationid, @RequestBody Customer customer){
+        logger.info("getCardsDetails method started");
         List<Cards> cards = cardsRepository.findByCustomerId(customer.getCustomerId());
+        logger.info("getCardsDetails method started");
         if(cards != null){
             return cards;
         }

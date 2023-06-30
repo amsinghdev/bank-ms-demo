@@ -11,6 +11,8 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.github.resilience4j.retry.annotation.Retry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +32,8 @@ public class AccountsController {
 
     @Autowired
     private LoansFeignClient loansFeignClient;
+
+    private Logger logger = LoggerFactory.getLogger(AccountsController.class);
 
     @PostMapping("/accounts")
     public Accounts getAccountDetails(@RequestBody Customer customer){
@@ -53,6 +57,7 @@ public class AccountsController {
     @Retry(name="retryForCustomerDetails",fallbackMethod = "getCustomerDetailsFallBack")
     public CustomerDetails getCustomerDetails(@RequestHeader("ambank-correlation-id") String correlationid, @RequestBody Customer customer){
 
+        logger.info("getCustomerDetails method started");
         Accounts accounts = accountsRepository.getAccountByCustomerId(customer.getCustomerId());
 
         List<Cards> cards = cardsFeignClient.getCardsDetails(correlationid,customer);
@@ -62,7 +67,7 @@ public class AccountsController {
         customerDetails.setAccounts(accounts);
         customerDetails.setCards(cards);
         customerDetails.setLoans(loans);
-
+        logger.info("getCustomerDetails method end");
         return customerDetails;
     }
 
