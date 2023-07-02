@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.github.resilience4j.retry.annotation.Retry;
+import io.micrometer.core.annotation.Timed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,7 @@ public class AccountsController {
     private Logger logger = LoggerFactory.getLogger(AccountsController.class);
 
     @PostMapping("/accounts")
+    @Timed(value = "getAccountDetails.time", description = "time taken to return account details")
     public Accounts getAccountDetails(@RequestBody Customer customer){
         Accounts accounts = accountsRepository.getAccountByCustomerId(customer.getCustomerId());
         if(accounts != null)
