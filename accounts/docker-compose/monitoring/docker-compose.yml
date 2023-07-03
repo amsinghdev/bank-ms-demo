@@ -1,0 +1,181 @@
+version: "3.8"
+
+services:
+
+  grafana:
+    image: "grafana/grafana:latest"
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=password
+    networks:
+      - ambank
+    depends_on:
+      - prometheus
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - ambank
+
+  zipkin:
+    image: openzipkin/zipkin
+    mem_limit: 700m
+    ports:
+      - "9411:9411"
+    networks:
+      - ambank
+
+  configserver:
+    image: asingh434/configservice:latest
+    mem_limit: 700m
+    ports:
+      - "8071:8071"
+    depends_on:
+      - zipkin
+    networks:
+      - ambank
+    environment:
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_ZIPKIN_BASEURL: http://zipkin:9411/
+
+  eurekaserver:
+    image: asingh434/eurekaserver:latest
+    mem_limit: 700m
+    ports:
+      - "8070:8070"
+    networks:
+      - ambank
+    depends_on:
+      - configserver
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 30s
+        max_attempts: 3
+        window: 120s
+    environment:
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+      SPRING_ZIPKIN_BASEURL: http://zipkin:9411/
+
+  accounts:
+    image: asingh434/accounts:latest
+    mem_limit: 700m
+    ports:
+      - "8080:8080"
+    networks:
+      - ambank
+    depends_on:
+      - configserver
+      - eurekaserver
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 30s
+        max_attempts: 3
+        window: 120s
+    environment:
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka/
+      SPRING_ZIPKIN_BASEURL: http://zipkin:9411/
+
+  accounts1:
+    image: asingh434/accounts:latest
+    mem_limit: 700m
+    ports:
+      - "8081:8080"
+    networks:
+      - ambank
+    depends_on:
+      - configserver
+      - eurekaserver
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 30s
+        max_attempts: 3
+        window: 120s
+    environment:
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka/
+      SPRING_ZIPKIN_BASEURL: http://zipkin:9411/
+
+  loans:
+    image: asingh434/loans:latest
+    mem_limit: 700m
+    ports:
+      - "8090:8090"
+    networks:
+      - ambank
+    depends_on:
+      - configserver
+      - eurekaserver
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 30s
+        max_attempts: 3
+        window: 120s
+    environment:
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka/
+      SPRING_ZIPKIN_BASEURL: http://zipkin:9411/
+
+  cards:
+    image: asingh434/cards:latest
+    mem_limit: 700m
+    ports:
+      - "8091:8091"
+    networks:
+      - ambank
+    depends_on:
+      - configserver
+      - eurekaserver
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 30s
+        max_attempts: 3
+        window: 120s
+    environment:
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka/
+      SPRING_ZIPKIN_BASEURL: http://zipkin:9411/
+
+  gatewayserver:
+    image: asingh434/gatewayserver:latest
+    mem_limit: 700m
+    ports:
+      - "8072:8072"
+    networks:
+      - ambank
+    depends_on:
+      - configserver
+      - eurekaserver
+      - accounts
+      - loans
+      - cards
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 45s
+        max_attempts: 3
+        window: 180s
+    environment:
+      SPRING_PROFILES_ACTIVE: default
+      SPRING_CONFIG_IMPORT: configserver:http://configserver:8071/
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eurekaserver:8070/eureka/
+      SPRING_ZIPKIN_BASEURL: http://zipkin:9411/
+
+networks:
+  ambank:
